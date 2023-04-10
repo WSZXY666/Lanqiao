@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../echarts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            margin: 20px;
+            background-color: rgb(228, 255, 192);
+        }
+    </style>
+</head>
+
+<body>
+<!-- 为 ECharts 准备一个宽为 600px，高为 400px 的 DOM -->
+<div id="main" style="width: 600px;height:400px;"></div>
+</body>
+<script>
+    const chartDom = document.getElementById("main");
+    // 初始化实例对象 echarts.init(dom) 容器;
+    const myChart = echarts.init(chartDom);
+    option = {
+        xAxis: {
+            data: ['A', 'B', 'C', 'D', 'E']
+        },
+        yAxis: {},
+        series: [
+            {
+                data: [10, 22, 28, 43, 49],
+                type: 'line',
+                stack: 'x'
+            },
+            {
+                data: [5, 4, 3, 5, 10],
+                type: 'line',
+                stack: 'x'
+            }
+        ]
+    };
+    // 将配置项设置给 echarts 实例对象。
+    myChart.setOption(option);
+    console.log(option);
+</script>
+
+</html>

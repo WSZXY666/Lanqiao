@@ -1,0 +1,111 @@
+<!--Vue核心-->
+<!DOCTYPE html>
+<html lang="">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312"/>
+    <title>购物车</title>
+    <script src="./js/goods.js"></script>
+    <script type="text/javascript" src="./js/vue.js"></script>
+    <link href="./css/index.css" rel="stylesheet" type="text/css"/>
+</head>
+
+<body>
+<div id="app">
+    <!-- 商品列表 -->
+    <h3>商品列表</h3>
+    <ul id="goodsList">
+        <template v-for="goods in goodsList">
+            <li class="goods-item" :key="goods.id">
+                <div><img :src="goods.imgUrl"/></div>
+                <div>{{goods.name}}</div>
+                <div>¥ {{goods.price}}</div>
+                <button @click="addToCart(goods)">加入购物车</button>
+            </li>
+        </template>
+    </ul>
+    <!-- 购物车 -->
+    <template v-if="cartList.length > 0">
+        <h3>购物车</h3>
+        <ul id="cartList">
+            <template v-for="goods in cartList">
+                <li class="goods-item" :key="goods.id">
+                    <div><img :src="goods.imgUrl"/></div>
+                    <div>{{goods.name}}</div>
+                    <div>¥ {{goods.price}}</div>
+                    <div class="item-control">
+                        <button @click="removeGoods(goods)">-</button>
+                        <h4>{{goods.num}}</h4>
+                        <button @click="addToCart(goods)">+</button>
+                    </div>
+                </li>
+            </template>
+        </ul>
+    </template>
+</div>
+</body>
+
+</html>
+
+<script>
+    new Vue({
+        el: '#app',
+        data: {
+            cartList: [],
+            goodsList: []
+        },
+        mounted() {
+            this.goodsList = GoodsArr;
+        },
+        methods: {
+            /*
+            这段代码实现了一个购物车的添加商品功能。
+            具体来说，这个函数接受一个商品对象 goods 作为参数。
+            它首先使用 findIndex 方法遍历购物车列表 cartList，寻找是否已经存在 id 与当前商品相同的购物车项。
+            如果找到了，则将该购物车项中的数量加一；如果找不到，则将当前商品添加到购物车列表中，其数量设为 1。
+            需要注意的是，为了避免在修改购物车列表时出现引用问题，这个函数将 this.cartList 先进行深拷贝，再进行修改。最后返回修改后的购物车列表。
+            总结起来就是：向购物车加入商品时，先判断此商品是否已经在购物车列表中。如果在，则将对应项数量加一；如果不在则新建一项并添加到列表中。最后返回修改后的购物车列表。
+             */
+            addToCart(goods) {
+                // TODO：修改当前函数，实现购物车加入商品需求
+                let itemIndex = this.cartList.findIndex(item => item.id === goods.id);
+                console.log(itemIndex);
+                if (itemIndex !== -1) {
+                    this.cartList[itemIndex].num++;
+                } else {
+                    goods.num = 1;
+                    this.cartList.push(goods);
+                }
+                this.cartList = JSON.parse(JSON.stringify(this.cartList));
+            },
+            /*
+            这段代码实现了从购物车中删除商品的功能。
+            具体来说，这个方法接受一个商品对象 goods 作为参数。
+            它使用 findIndex 方法遍历购物车列表 cartList，查找购物车中与当前商品相同的购物车项，并获取其在购物车列表中的索引。
+            如果找到了对应的购物车项且其数量大于1，就将该购物车项的数量减一；如果数量等于1，则从购物车列表中删除该项。
+            需要注意的是，为了避免在修改购物车列表时出现引用问题，这个函数将 this.cartList 先进行深拷贝，再进行修改。最后返回修改后的购物车列表。
+            总结起来就是：从购物车中删除商品时，找到相应的购物车项并判断其数量是否大于1。如果大于1，则将数量减一；否则将该项从列表中删除。最后返回修改后的购物车列表。
+             */
+            removeGoods(goods) {
+                // TODO：补全代码实现需求
+                let itemIndex = this.cartList.findIndex(item => item.id === goods.id);
+                if (this.cartList[itemIndex].num > 1) {
+                    this.cartList[itemIndex].num--
+                } else {
+                    this.cartList.splice(itemIndex, 1)
+                }
+            }
+            /*
+            itemIndex 可能指代购物车中某一商品在商品列表中的序号，或者指代购物车中某个商品在购物车列表中的索引值。
+            具体来说，在购物车系统中，需要实现一个添加、删除、更新商品数量等操作的功能，其中就需要用到 itemIndex 参数。
+            例如，当用户在购物车页面点击删除按钮时，系统需要知道用户要删除哪个商品。此时可以通过传入 itemIndex 参数来唯一确定被删除的商品。
+            */
+            /*
+            在这段代码中，体现深拷贝的步骤是在删除购物车项之前，将 this.cartList 进行了一次深拷贝。
+            具体来说，使用 JSON.parse() 方法将购物车列表对象转换为 JSON 字符串，然后再使用 JSON.stringify() 方法将 JSON 字符串转换回原始对象，并存储到一个新的变量中去，以确保修改操作不会影响到原始的购物车列表对象。
+            这样做是因为 JavaScript 中的对象和数组都是通过引用传递的，在对引用类型进行赋值、传参等操作时，实际上只是对引用进行了复制。
+            因此如果直接对购物车列表进行修改操作，可能会影响到购物车列表的其他部分。所以使用深拷贝可以避免这种问题。
+             */
+        }
+    });
+</script>

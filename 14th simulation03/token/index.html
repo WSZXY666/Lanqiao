@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zn-CH">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./lib/vue.min.js"></script>
+    <script src="./lib/vuex.min.js"></script>
+    <script src="./store/BaseModule.js"></script>
+    <script src="./store/UserModule.js"></script>
+    <script src="./store/index.js"></script>
+    <link rel="stylesheet" href="./css/style.css">
+    <title>消失的Token</title>
+</head>
+
+<body>
+<div id="app">
+    <div class="wrapper" style="width: 900px;">
+        <!-- 2. 登录成功后的欢迎界面 -->
+        <Panel v-if="token" :username="username">
+            {{welcome}}
+        </Panel>
+
+        <!-- 1. 登录界面 -->
+        <Login v-else @confirm="login">
+            {{welcome}}
+        </Login>
+
+    </div>
+</div>
+
+<script src="./components/login.js"></script>
+<script src="./components/panel.js"></script>
+<script>
+    // TODO 修改下面错误代码
+    const app = new Vue({
+        el: '#app',
+        store,
+        data() {
+
+        },
+        computed: {
+            token() {
+                return this.$store.getters['user/token'];
+            },
+            welcome() {
+                return this.$store.getters.welcome;
+            },
+            username() {
+                return this.$store.getters['user/username'];
+            }
+        },
+        methods: {
+            // 回车/点击确认的回调事件
+            login(username) {
+                username && this.$store.commit('user/login', {username, token: 'sxgWKnLADfS8hUxbiMWyb'});
+                username && this.$store.commit('say', '登录成功，欢迎你回来！');
+            }
+        }
+    });
+</script>
+</body>
+
+</html>

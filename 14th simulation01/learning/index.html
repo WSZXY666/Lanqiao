@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN" style="height: 100%">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>学海无涯</title>
+    <!-- <script type="text/javascript" src="https://fastly.jsdelivr.net/npm/echarts@5.3.3/dist/echarts.min.js"></script> -->
+    <script src="./js/echarts.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css"/>
+    <script src="./js/axios.min.js"></script>
+</head>
+
+<body style="height: 100%; margin: 0">
+<!-- tab 栏 -->
+<div class="container">
+    <div class="tabs">
+        <input type="radio" id="week" name="tabs" checked/>
+        <label class="tab" for="week">周</label>
+        <input type="radio" id="month" name="tabs"/>
+        <label class="tab" for="month">月</label>
+        <span class="glider"></span>
+    </div>
+</div>
+<div
+        id="container"
+        style="width: 80%; height: 80%; margin: 40px auto 0"
+></div>
+<script type="text/javascript">
+    let weekData = [];
+    let monthData = [];
+    const dom = document.getElementById("container");
+    const myChart = echarts.init(dom, null, {
+        renderer: "canvas",
+        useDirtyRect: false,
+    });
+    let option;
+    option = {
+        title: {
+            text: "学习时长统计图",
+        },
+        legend: {},
+        xAxis: {
+            // x 轴数据
+            type: "category",
+            data: ["2月第1周", "2月第2周", "2月第3周", "2月第4周", "3月第1周", "3月第2周", "3月第3周", "3月第4周", "3月第5周"],
+        },
+        yAxis: {
+            type: "value",
+            name: "分钟",
+            axisLabel: {
+                formatter: "{value}",
+            },
+        },
+        series: [
+            // y 轴数据
+            {
+                data: weekData,
+                type: "bar",
+                // itemStyle: {
+                //     normal: {
+                //         label: {
+                //             show: true, //开启显示数值
+                //             position: 'top', //数值在上方显示
+                //             textStyle: {  //数值样式
+                //                 color: '#3757c7',   //字体颜色
+                //                 fontSize: 14  //字体大小
+                //             }
+                //         }
+                //     }
+                // }
+            },
+        ],
+    };
+    if (option && typeof option === "object") {
+        // 设置图表
+        myChart.setOption(option);
+    }
+    window.addEventListener("resize", myChart.resize);
+
+    // TODO:待补充代码
+    axios.get('./data.json').then(res => {
+        let study = res.data.data;
+        let dailyData = study["2月"].concat(study["3月"]);
+        let currentWeek = 1;
+        let month2 = 0, month3 = 0;
+
+        for (let i = 0; i < 59; i++) {
+            if (i % 7 === 0) {
+                weekData.push(0);
+                currentWeek++;
+            }
+            weekData[currentWeek - 2] += dailyData[i];
+        }
+        for (let i = 0; i < study["2月"].length; i++) {
+            month2 += study["2月"][i];
+        }
+        for (let i = 0; i < study["3月"].length; i++) {
+            month3 += study["3月"][i];
+        }
+        monthData = [month2, month3];
+        console.log(monthData);
+        document.querySelectorAll('.tabs .tab')[0].addEventListener('click', () => {
+            option.xAxis.data = ["2月第1周", "2月第2周", "2月第3周", "2月第4周", "3月第1周", "3月第2周", "3月第3周", "3月第4周", "3月第5周"];
+            option.series[0].data = weekData;
+            myChart.setOption(option);
+        });
+        document.querySelectorAll('.tabs .tab')[1].addEventListener('click', () => {
+            option.xAxis.data = ["2月", "3月"];
+            // 在修改 series.data 时，需要注意到 series 是一个数组类型。
+            // 如果只有一个系列，则可以通过 series[0] 来指定它。如果有多个系列，则需要选择正确的索引来修改它们。
+            option.series[0].data = monthData;
+            myChart.setOption(option);
+        });
+
+        myChart.setOption(option);
+    })
+</script>
+</body>
+</html>

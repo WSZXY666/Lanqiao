@@ -1,0 +1,94 @@
+/* TODO：待补充代码 */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.top {
+    position: relative;
+    width: 1920px;
+    height: 506px;
+    background-image: url(../images/banner-bg.png);
+}
+
+.time {
+    position: absolute;
+    width: 620px;
+    height: 499px;
+    top: 60px;
+    left: 650px;
+}
+
+.top1 {
+    position: absolute;
+    z-index: 99;
+    top: 464px;
+    left: -35px;
+    width: 1990px;
+    height: 462px;
+    background-image: url(../images/stage.png);
+}
+
+.yh {
+    width: 646px;
+    height: 72px;
+    margin-top: 110px;
+    margin-left: 652px;
+}
+
+.list {
+    margin-left: 400px;
+}
+
+.list div {
+    float: left;
+    margin-right: 30px;
+    margin-top: 54px;
+}
+
+.list div:last-child {
+    margin-right: 0;
+}
+
+.bottom {
+    position: relative;
+    width: 1920px;
+    height: 1369px;
+    background: #290897;
+}
+
+.bg {
+    position: absolute;
+    top: 500px;
+    left: 355px;
+    width: 1216px;
+    height: 800px;
+    background-image: url(../images/bg.png);
+}
+
+.ban {
+    width: 1120px;
+    height: 586px;
+    background: #FFF9E0;
+    border-radius: 10px;
+    margin: 112px auto;
+}
+
+.sp1 {
+    font-family: PingFangSC-Semibold;
+    font-size: 24px;
+    color: #FF5B13;
+    letter-spacing: 0;
+    line-height: 50px;
+    font-weight: 600;
+    margin-left: 24px;
+}
+
+.sp2 {
+    font-family: PingFangSC-Medium;
+    font-size: 24px;
+    color: #AA544C;
+    letter-spacing: 0;
+    line-height: 50px;
+    font-weight: 500;
+}

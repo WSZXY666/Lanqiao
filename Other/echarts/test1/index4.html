@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../echarts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            margin: 20px;
+            background-color: rgb(228, 255, 192);
+        }
+    </style>
+</head>
+
+<body>
+<!-- 为 ECharts 准备一个宽为 600px，高为 400px 的 DOM -->
+<div id="main" style="width: 600px;height:400px;"></div>
+</body>
+<script>
+    const chartDom = document.getElementById("main");
+    // 初始化实例对象 echarts.init(dom) 容器;
+    const myChart = echarts.init(chartDom);
+    const data = [900, 345, 393, -108, -154, 135, 178, 286, -119, -361, -203];
+    const help = [];
+    const positive = [];
+    const negative = [];
+    let i = 0, sum = 0;
+    for (; i < data.length; ++i) {
+        if (data[i] >= 0) {
+            positive.push(data[i]);
+            negative.push('-');
+        } else {
+            positive.push('-');
+            negative.push(-data[i]);
+        }
+
+        if (i === 0) {
+            help.push(0);
+        } else {
+            sum += data[i - 1];
+            if (data[i] < 0) {
+                help.push(sum + data[i]);
+            } else {
+                help.push(sum);
+            }
+        }
+    }
+
+    option = {
+        title: {
+            text: 'Waterfall'
+        },
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+        xAxis: {
+            type: 'category',
+            splitLine: {show: false},
+            data: (function () {
+                const list = [];
+                for (let i = 1; i <= 11; i++) {
+                    list.push('Oct/' + i);
+                }
+                return list;
+            })()
+        },
+        yAxis: {
+            type: 'value'
+        },
+        series: [
+            {
+                type: 'bar',
+                stack: 'all',
+                itemStyle: {
+                    normal: {
+                        barBorderColor: 'rgba(0,0,0,0)',
+                        color: 'rgba(0,0,0,0)'
+                    },
+                    emphasis: {
+                        barBorderColor: 'rgba(0,0,0,0)',
+                        color: 'rgba(0,0,0,0)'
+                    }
+                },
+                data: help
+            },
+            {
+                name: 'positive',
+                type: 'bar',
+                stack: 'all',
+                data: positive
+            },
+            {
+                name: 'negative',
+                type: 'bar',
+                stack: 'all',
+                data: negative,
+                itemStyle: {
+                    color: '#f33'
+                }
+            }
+        ]
+    };
+    // 将配置项设置给 echarts 实例对象。
+    myChart.setOption(option);
+    console.log(option);
+</script>
+
+</html>

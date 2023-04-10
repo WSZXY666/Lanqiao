@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>绝美宋词</title>
+    <link rel="stylesheet" href="css/style.css"/>
+    <script src="./js/vue.min.js"></script>
+    <script src="./js/axios.min.js"></script>
+</head>
+
+<body>
+<div id="app">
+    <h1 style="text-align: center">输入关键字，找一首词</h1>
+    <!-- TODO：待补充代码 -->
+    <div class="search-form">
+        <input type="text" id="search" v-model.trim="kw" class="search" placeholder="词牌名 词句 词人"/>
+        <ul class="suggestions">
+            <!-- 每一首完整词句用一个 li 包裹 -->
+            <li v-for="item in showdata">
+                <span class="poet" v-html="item.poetry_content"></span>
+                <span class="title" v-html="item.title + '-' +item.author"></span>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    let vm = new Vue({
+        el: '#app',
+        // TODO：待补充代码
+        data() {
+            return {
+                data: [],
+                showdata: [],
+                kw: ''
+            }
+        },
+        mounted() {
+            axios.get('./data.json').then(res =>
+                this.data = res.data
+            )
+        },
+        // 使用 Vue 的 watch API 来监听 kw 的变化。当 kw 的值发生变化时，会触发该函数。
+        watch: {
+            kw(val) {
+                // 当关键字为空时，将showdata清空
+                if (!val) {
+                    return this.showdata = [];
+                }
+                //这里使用json是为了深拷贝，生成一个与 this.data 完全独立的数组，不然会影响原来的对象this.data
+                // 进行深拷贝并使用reduce函数遍历this.data数组
+                this.showdata = JSON.parse(JSON.stringify(this.data)).reduce((arr, item) => {
+                    // 遍历item对象
+                    for (let i in item) {
+                        // 如果对象的属性值中包含关键字val
+                        if (item[i].includes(val)) {
+                            // 遍历item对象的属性
+                            for (let j in item) {
+                                //如果有包含关键字， 遍历这个对象，把所有包含关键字的替换高亮
+                                item[j] = item[j].replaceAll(val, `<span class="highlight">$&</span>`);
+                            }
+                            // 将包含关键字的item对象添加到arr数组中
+                            return [...arr, item];
+                        }
+                    }
+                    // 如果item对象中不包含关键字，则直接返回arr数组
+                    return [...arr];
+                }, [])
+            }
+        },
+        /*
+        在这个代码块中，第一次遍历用于检查当前元素是否包含关键字。如果包含关键字，第二次遍历将用于替换当前元素中所有属性值中的关键字。
+        具体来说，在第一次遍历中，对于当前元素的每一个属性值，都会调用 String.prototype.includes() 方法来检查该值是否包含关键字。
+        如果检查到有任何一个属性值包含关键字，就会进入第二次遍历，对当前元素的所有属性值中的关键字进行替换。
+        因为第二次遍历需要遍历当前元素的所有属性值，而第一次遍历已经遍历了当前元素的每一个属性，因此我们可以在第一次遍历时同时记录下当前元素是否包含关键字，从而避免在第二次遍历中多余的检查。
+        这样，如果当前元素不包含关键字，就可以直接跳过第二次遍历，从而提高代码的效率。
+        */
+
+        /*
+        对于watch:
+        第 1 行：使用 Vue.js 提供的 watch 选项来监听 kw 属性的变化。这里的回调函数接收一个参数 val，表示 kw 的新值。
+        第 3~5 行：如果搜索关键字为空，则清空显示的数据，即不显示任何内容。
+        第 7 行：遍历数据对象数组，并使用 JSON.parse(JSON.stringify(this.data)) 来创建原数据的一个深拷贝，以防止修改原数据。
+                同时，使用 reduce() 方法来将匹配的数据对象存入 showdata 数组中。
+        第 8 行：对于每个数据对象，使用 for...in 循环遍历其所有属性，并检查属性值是否包含搜索关键字 val。
+        第 9~12 行：如果属性值包含关键字，则使用 for...in 循环遍历该对象所有属性，并将其中所有匹配的关键字用 <span> 标签高亮显示。
+                   这里使用了 JavaScript 中的 String.prototype.replaceAll() 方法来替换所有匹配的关键字。
+        第 13~15 行：将修改后的数据对象加入 arr 数组中，并使用展开语法将其与之前的数组合并。如果没有任何匹配，直接返回 arr 原样即可。
+        第 16 行：将最终的 arr 数组赋值给 showdata，以更新显示的数据。
+         */
+
+        /*
+        深拷贝和浅拷贝都是复制一个对象，但它们的复制方式不同。
+           1、浅拷贝只是复制对象的引用，两个对象会指向同一块内存空间，当修改其中一个对象时，另一个对象也会受到影响。
+              换句话说，浅拷贝只复制对象的第一层，对于复杂对象中的嵌套对象，仍然是引用关系。
+           2、深拷贝是将一个对象完整地复制到一个新的内存地址中，包括嵌套对象，不会存在引用关系，因此修改其中一个对象不会影响到另一个对象。
+        在代码中，JSON.parse(JSON.stringify(obj)) 可以实现简单的深拷贝。
+        因为 JSON.stringify 会将对象序列化成字符串，然后 JSON.parse 将字符串转化为新的对象，这样就能完整地复制整个对象，而不会存在引用关系。
+        但是，该方法有以下限制：
+           1、该方法不能复制函数、RegExp 等特殊对象；
+           2、该方法会忽略 undefined、Symbol 和函数；
+           3、该方法不能序列化循环引用的对象，否则会报错。
+        对于复杂的对象或数组，需要使用其他的深拷贝方法，如 lodash 的 cloneDeep、jQuery 的 extend 等。
+         */
+
+        /*
+        reduce() 是 JavaScript 中数组的高阶函数之一，它可以对数组中的每个元素进行一次归并操作，最终返回一个单一的结果。
+        reduce() 函数接收两个参数：一个归并函数和一个初始值。归并函数用于处理数组中的每个元素，将处理结果和下一个元素作为参数传递给下一次迭代，最终得到一个单一的结果。
+        初始值是可选的，如果不指定初始值，则使用数组的第一个元素作为初始值。
+        reduce() 的基本语法如下：
+        array.reduce(callback, initialValue)
+        其中，callback 函数接收四个参数：
+             accumulator：累计器，它是归并函数的返回值，用于保存上一次迭代的结果；
+             currentValue：当前元素，数组中当前被处理的元素；
+             currentIndex：当前元素的索引；
+             array：原数组。
+        归并函数可以根据需求自定义实现，常见的用途有求和、求平均数、数组扁平化、去重等等。
+
+        在 reduce() 函数中，每次迭代都会根据条件将修改后的元素添加到 showdata 数组中，如果不满足条件，则需要将 arr 数组原样返回。
+        由于 reduce() 函数的工作原理是基于上一次迭代的结果，如果每次迭代都返回一个空数组 []，则会导致后面的迭代结果出现错误。
+        因此，如果条件不满足，就需要将上一次迭代的结果 arr 原样返回，保持 reduce() 函数的正常工作流程。
+        这也是 reduce() 函数的基本用法之一，即对数组中的每个元素进行处理，并返回一个新的数组。
+        在这个过程中，如果有元素不满足处理条件，则将原样返回，避免干扰后续的处理。
+         */
+    })
+</script>
+</body>
+
+</html>

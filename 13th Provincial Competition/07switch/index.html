@@ -1,0 +1,55 @@
+<!--Vue核心-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8"/>
+    <title>布局切换</title>
+    <script type="text/javascript" src="./js/vue.js"></script>
+    <link rel="stylesheet" type="text/css" href="./css/index.css"/>
+    <script src="./js/axios.min.js" type="text/javascript" charset="utf-8"></script>
+</head>
+
+<body>
+<div id="app" v-cloak>
+    <!-- TODO：请在下面实现需求 -->
+    <div class="bar">
+        <a :class="{'active':active}" class="grid-icon " @click="grid()"></a> <!-- active为true时激活 -->
+        <a :class="{'active':!active}" class="list-icon" @click="list()"></a> <!-- active为false时激活 -->
+    </div>
+    <!--grid 示例代码，动态渲染时可删除-->
+    <!--active为true时class="grid",active为false时class="list"-->
+    <ul :class="active?'grid':'list'" v-for="item in goodsList" :key="item.url">
+        <li>
+            <a :href="item.url" target="_blank"> <img :src="item.image.large" alt=""/></a>
+            <!--active为false时，显示title-->
+            <p v-show="!active">{{item.title}}</p>
+        </li>
+    </ul>
+</div>
+</body>
+
+</html>
+<script type="text/javascript">
+    const vm = new Vue({
+        el: "#app",
+        data: {
+            goodsList: [],
+            active: false
+        },
+        mounted() {
+            // TODO：补全代码实现需求
+            axios.get('./js/goodsList.json').then(res => {
+                this.goodsList = res.data;
+            })
+        },
+        methods: {
+            grid() {
+                this.active = true;
+            },
+            list() {
+                this.active = false;
+            }
+        }
+    });
+</script>

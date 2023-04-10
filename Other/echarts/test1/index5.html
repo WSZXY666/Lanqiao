@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="../echarts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #main {
+            margin: 20px;
+            background-color: rgb(228, 255, 192);
+        }
+    </style>
+</head>
+
+<body>
+<!-- 为 ECharts 准备一个宽为 600px，高为 400px 的 DOM -->
+<div id="main" style="width: 600px;height:400px;"></div>
+</body>
+<script>
+    const nums = [25, 5, 4, 35, 12, 30];
+    const myChart = echarts.init(document.getElementById("main"));
+    option = {
+        xAxis: {
+            type: "category",
+            data: ["喜剧片", "恐怖片", "爱情片", "科幻片", "纪录片", "动画片"],
+        },
+        yAxis: {
+            type: "value",
+        },
+        series: [
+            {
+                data: nums,
+                type: "bar",
+            },
+        ],
+    };
+    function updateData() {
+        // 生成随机数
+        var num = Math.floor(Math.random() * 10);
+        for (var i in nums) {
+            nums[i] = nums[i] + num;
+        }
+        myChart.setOption(option); // 绘制新图表
+    }
+
+    setInterval(function () {
+        updateData();
+    }, 1000);
+</script>
+
+</html>

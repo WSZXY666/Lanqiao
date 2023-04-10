@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <title>水果叠叠乐</title>
+    <script src="./js/jquery.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css"/>
+</head>
+<body>
+<div id="stars"></div>
+<div id="stars2"></div>
+<div id="stars3"></div>
+<ul id="card">
+    <li data-id="1" id="fruit-one">
+        <img src="./images/pineapple.svg" alt=""/>
+    </li>
+    <li data-id="1" id="fruit-two">
+        <img src="./images/pineapple.svg" alt=""/>
+    </li>
+    <li data-id="2" id="fruit-three">
+        <img src="./images/apple.svg" alt=""/>
+    </li>
+    <li data-id="2" id="fruit-four">
+        <img src="./images/apple.svg" alt=""/>
+    </li>
+    <li data-id="2" id="fruit-five">
+        <img src="./images/apple.svg" alt=""/>
+    </li>
+    <li data-id="1" id="fruit-six">
+        <img src="./images/pineapple.svg" alt=""/>
+    </li>
+    <li data-id="3" id="fruit-seven">
+        <img src="./images/avocado.svg" alt=""/>
+    </li>
+    <li data-id="3" id="fruit-eight">
+        <img src="./images/avocado.svg" alt=""/>
+    </li>
+    <li data-id="3" id="fruit-nine">
+        <img src="./images/avocado.svg" alt=""/>
+    </li>
+    <li data-id="4" id="fruit-ten">
+        <img src="./images/grapes.svg" alt=""/>
+    </li>
+    <li data-id="4" id="fruit-eleven">
+        <img src="./images/grapes.svg" alt=""/>
+    </li>
+    <li data-id="4" id="fruit-twelve">
+        <img src="./images/grapes.svg" alt=""/>
+    </li>
+</ul>
+<!-- 图片位置 -->
+<!-- 卡槽位置 -->
+<div class="fixed">
+    <div class="gradient-border" id="box"></div>
+</div>
+<script>
+    //选中 #card 元素下的所有列表项 li，并为其添加了一个点击事件的监听器。
+    $("#card li").on("click", function (e) {
+        // TODO: 待补充代码
+        //检查 #box 元素下的列表项 li 的数量，如果数量已经达到了 7 个或以上，那么不执行后续代码，直接返回。
+        if ($("#box li").length >= 7) {
+            return;
+        }
+        /*
+        首先通过 $(this) 获取当前被点击的列表项 li，然后调用 clone() 方法创建了这个元素的一个副本 clone。
+        接着，隐藏原始的列表项 li，并将 clone 元素添加到 #box 元素下。
+         */
+        const clone = $(this).clone();
+        $(this).hide();
+        $('#box').append(clone);
+        /*
+        检查在 #box 元素下，与当前添加的 clone 元素具有相同 data-id 属性值的所有列表项 li 的数量是否大于等于 3。
+        如果是，则将所有这样的元素从 #box 元素下移除。这里使用了模板字符串 ${} 和属性选择器 [] 来方便地选择元素。
+         */
+        if ($(`#box li[data-id=${clone.attr('data-id')}]`).length >= 3) {
+            $(`#box li[data-id=${clone.attr('data-id')}]`).remove();
+        }
+    });
+</script>
+</body>
+</html>
