@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="./js/vue.min.js"></script>
+    <link rel="stylesheet" href="./css/style.css" />
+    <title>骨架屏</title>
+  </head>
+  <body>
+    <script src="./components/List/index.js"></script>
+    <script src="./components/List/content.js"></script>
+    <script src="./components/Skeleton/item.js"></script>
+    <script src="./components/Skeleton/index.js"></script>
+    <div id="app">
+      <List v-for="i in 5">
+        <div v-show="loading">
+          <!-- 骨架屏组件 -->
+          <Skeleton :active="active" :paragraph="paragraph" />
+        </div>
+        <!-- 渲染真正的列表内容 -->
+        <List-content v-show="!loading" />
+      </List>
+    </div>
+    <script>
+      var app = new Vue({
+        el: "#app",
+        data() {
+          return {
+            loading: true,
+            active: true,
+            paragraph: {
+              // 骨架屏组件对应数据
+              type: "row",
+              rows: [
+                {
+                  rowStyle: {
+                    margin: "10px 0 14px 14px",
+                  },
+                  type: "rect",
+                  style: {
+                    width: "170px",
+                    height: "14px",
+                  },
+                },
+                {
+                  type: "col",
+                  cols: [
+                    {
+                      colStyle: {
+                        marginLeft: "15px",
+                        width: "80%",
+                      },
+                      type: "row",
+                      rows: [
+                        {
+                          type: "row",
+                          rowStyle: {
+                            marginTop: "12px",
+                          },
+                          rows: [
+                            {
+                              type: "rect",
+                              style: {
+                                width: "200px",
+                                height: "24px",
+                              },
+                            },
+                            {
+                              type: "rect",
+                              style: {
+                                width: "90%",
+                                height: "14px",
+                                borderRadius: "3px",
+                                marginTop: "18px",
+                              },
+                            },
+                            {
+                              type: "rect",
+                              style: {
+                                width: "65%",
+                                height: "14px",
+                                borderRadius: "3px",
+                                marginTop: "6px",
+                              },
+                            },
+                          ],
+                        },
+                        {
+                          type: "col",
+                          rowStyle: {
+                            marginTop: "28px",
+                          },
+                          cols: [
+                            {
+                              type: "circle",
+                              style: {
+                                width: "25px",
+                                height: "25px",
+                                marginRight: "4px",
+                              },
+                            },
+                            {
+                              type: "circle",
+                              style: {
+                                width: "25px",
+                                height: "25px",
+                                marginRight: "4px",
+                              },
+                            },
+                            {
+                              type: "circle",
+                              style: {
+                                width: "25px",
+                                height: "25px",
+                                marginRight: "4px",
+                              },
+                            },
+                            {
+                              type: "circle",
+                              style: {
+                                width: "25px",
+                                height: "25px",
+                              },
+                            },
+                            {
+                              type: "rect",
+                              style: {
+                                width: "150px",
+                                height: "25px",
+                                marginLeft: "12px",
+                                borderRadius: "100px",
+                              },
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      type: "row",
+                      rows: [
+                        {
+                          type: "rect",
+                          style: {
+                            width: "135px",
+                            height: "135px",
+                          },
+                        },
+                      ],
+                    },
+                  ],
+                },
+              ],
+            },
+          };
+        },
+        mounted() {
+          // 为了代码简洁此处不请求真实数据，使用定时器模拟请求的延迟
+          setTimeout(() => {
+            // ......当请求到数据时，开始渲染，loading状态结束
+            this.loading = false;
+          }, 5000);
+        },
+        methods: {},
+      });
+    </script>
+  </body>
+</html>
